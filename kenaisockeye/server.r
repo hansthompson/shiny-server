@@ -8,13 +8,13 @@ library(gridExtra)
 shinyServer(function(input, output) {  
   
   #Set base directory to load data from 
-  myDirectory <- "C:\\Users\\Hans T\\Documents\\GitHub\\dipnet_app\\data"
+  #myDirectory <- "C:\\Users\\Hans T\\Documents\\GitHub\\dipnet_app\\data"
   ########LOAD SONAR#######
-  load(paste(myDirectory, "kenai_data.rda", sep = "/"))
+  load("data/kenai_data.rda")
   ########GET REALTIME#####
-  load(paste(myDirectory, "rt_dat.rda" , sep = "/"))
+  load("data/rt_dat.rda")
   ########TEST FISH########
-  load(paste(myDirectory, "testFish.rda", sep = "/"))
+  load("data/testFish.rda")
 
   ########PROCESSING#######
   tides_reactive <- reactive({  
