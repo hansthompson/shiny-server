@@ -11,7 +11,7 @@ shinyUI(fluidPage(
   
   wellPanel(
     helpText("Hi. Play around with the inputs to subset the historical data or look at the predictions."),
-    sliderInput("year", "Years of Interest", min = 1979, max = 2012, value = c(2002, 2012)),
+    sliderInput("year", "Years of Interest", min = 1979, max = 2012, value = c(2002, 2012), sep = ""),
     textInput("start_date", "Start Date:", "06-30"),
     textInput("end_date", "End Date:", "08-05")
   ),
@@ -21,11 +21,11 @@ shinyUI(fluidPage(
     ),
   wellPanel(
       helpText(HTML("<b>VERSION CONTROL</b>")),
-      HTML('Version 0.8.0'),
+      HTML('Version 0.9.0'),
       HTML('<br>'),
       HTML('Deployed on June 3rd, 2014'),
       HTML('<br>'),
-      HTML('<a href="https://github.com/hansthompson/dipnet_app" target="_blank">Code on GitHub</a>')
+      HTML('<a href="https://github.com/hansthompson/shiny-server/tree/master/kenaisockeye" target="_blank">Code on GitHub</a>')
     ) 
 
   ),
@@ -33,7 +33,7 @@ shinyUI(fluidPage(
   mainPanel(
     
     tabsetPanel(
-      tabPanel("2014 Real Time", 
+      tabPanel("2015 Real Time", 
                plotOutput("realtime"),
                plotOutput("testFishery"),
                plotOutput("testFisheryComments")

@@ -1,5 +1,5 @@
 library(ggplot2)
-library(plyr)
+library(dplyr)
 library(shiny)
 library(lubridate)
 library(stringr)
@@ -8,27 +8,33 @@ library(gridExtra)
 shinyServer(function(input, output) {  
 
   ########LOAD SONAR#######
-  load("data/kenai_data.rda")
+  load("data/sonar.rda")
   ########GET REALTIME#####
   load("data/rt_dat.rda")
   ########TEST FISH########
   load("data/testFish.rda")
 
+  #input <- list(year = c(2002,2012), 
+  #              start_date = "06-30", 
+  #              end_date = "08-05")
   
   sonar_reactive <- reactive({
-    sonar_df$year <- factor(sonar_df$year)
+    year(sonar$date) <- 2014
     start_year <- input$year[1]
     end_year   <- input$year[2]
-    start_date <-  ymd(paste("2014",input$start_date, sep = "-"))
-    end_date <- ymd(paste("2014", input$end_date, sep = "-"))
+    start_date <- ymd(paste("2014", input$start_date, sep = "-"))
+    end_date   <- ymd(paste("2014", input$end_date, sep = "-"))
   
-    sonar_df <- sonar_df[start_year <= as.numeric(levels(sonar_df$year))[sonar_df$year] &
-                         end_year   >= as.numeric(levels(sonar_df$year))[sonar_df$year] &
-                         start_date <= sonar_df$date &
-                         end_date   >= sonar_df$date,]      
-  return(sonar_df)
-  #sonar_reactive <- sonar_df
+    sonar %>% 
+      filter(year >= start_year, year <= end_year, 
+             date >= start_date,
+             date <= end_date
+  )
+    
+  #sonar_reactive <- sonar
   })
+  
+  
   
   realtime_reactive <- reactive({
     return(rt_dat2)
@@ -37,15 +43,9 @@ shinyServer(function(input, output) {
   ########################  
 
   #######PLOTING#########
-  prior_linechart <- reactive({
-    p <- ggplot(data = sonar_reactive(), aes(x = date, y = n, group = year, color = year)) + 
-         geom_line()
-    return(p)     
-  })
-  
   prior_barchart <- reactive({
-    p <- ggplot(data = sonar_reactive(), aes(x = date, y = n, group = year, color = year, fill = year)) + 
-         geom_bar(stat = "identity")
+    p <- ggplot(data = sonar_reactive(), aes(x = date, y = n, group = year, fill = factor(year))) + 
+         geom_bar(stat = "identity") + ylab("Daily Count") + xlab("Date")
     return(p)    
   })
   
@@ -86,13 +86,20 @@ shinyServer(function(input, output) {
   ######Publishing#########
 
   ###TABSET: REAL TIME#####
-  output$realtime <- renderPlot({
-    print(realtime_chart())
-  })
+  #output$realtime <- renderPlot({
+  #  print(realtime_chart())
+  #})
 
-  output$tides <- renderPlot({
-    print(tide_chart())
+  output$realtime <- renderPlot({
+  download.file(url = "https://www.adfg.alaska.gov/sf/FishCounts/index.cfm?ADFG=export.excel&countLocationID=40&year=2015,2014&speciesID=420",
+                destfile = "this_seasons_sockeye_count.csv")
+  this_season <- read.csv("this_seasons_sockeye_count.csv", sep = "\t")
+  this_season$count_date <- ymd(paste(this_season$year, this_season$count_date))
+  
+  ggplot(this_season, aes(x = count_date, y = fish_count)) + geom_bar(stat = "identity") + 
+    ylab("Fish Count") + xlab("Date in 2015") + ggtitle("This Season's Kenai Sockeye Return")
   })
+  
 
   output$testFishery <- renderPlot({
     print(testFishReactive())
