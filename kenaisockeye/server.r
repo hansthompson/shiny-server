@@ -6,9 +6,7 @@ library(stringr)
 library(gridExtra)
 
 shinyServer(function(input, output) {  
-  
-  #Set base directory to load data from 
-  #myDirectory <- "C:\\Users\\Hans T\\Documents\\GitHub\\dipnet_app\\data"
+
   ########LOAD SONAR#######
   load("data/kenai_data.rda")
   ########GET REALTIME#####
@@ -16,19 +14,11 @@ shinyServer(function(input, output) {
   ########TEST FISH########
   load("data/testFish.rda")
 
-  ########PROCESSING#######
-  tides_reactive <- reactive({  
-    days_in_the_future <- 1
-    start_time <- now() - hours(10)
-    end_time <- now() + days(days_in_the_future)
-    return(tide_df[tide_df$times > start_time & tide_df$times < end_time,])
-    #tides_reactive <- tide_df[tide_df$times > start_time & tide_df$times < end_time,]
-  })
   
   sonar_reactive <- reactive({
     sonar_df$year <- factor(sonar_df$year)
-    start_year <- as.numeric(input$start_year)
-    end_year <- as.numeric(input$end_year)
+    start_year <- input$year[1]
+    end_year   <- input$year[2]
     start_date <-  ymd(paste("2014",input$start_date, sep = "-"))
     end_date <- ymd(paste("2014", input$end_date, sep = "-"))
   
@@ -77,13 +67,6 @@ shinyServer(function(input, output) {
     return(p)
   })
   
-  tide_chart <- reactive({
-    p <- ggplot(data = tides_reactive(), aes(x = times, y = height)) +
-      geom_smooth(method = "loess", se = FALSE) + ggtitle("Tidal Cycle") +
-      ylab("River Depth in Feet")
-    return(p)
-  })
-
   testFishReactive <- reactive({
     p <- ggplot(data = testFish, aes(x = Date, y = StationCount, color = allIDs, fill = allIDs)) +
            geom_bar(stat = "identity") +
@@ -116,7 +99,6 @@ shinyServer(function(input, output) {
   })
 
   output$testFisheryComments <- renderPlot({
-  	##WEAKLY CODED RIGHT HERE FOLKS
     grid.table(d = unique(testFish[testFish$Comment != "", c(2, 9)]),
                show.rownames = FALSE)
   })

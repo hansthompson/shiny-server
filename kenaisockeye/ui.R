@@ -11,8 +11,7 @@ shinyUI(fluidPage(
   
   wellPanel(
     helpText("Hi. Play around with the inputs to subset the historical data or look at the predictions."),
-    textInput("start_year", "Start Year:", "2007"),
-    textInput("end_year", "End Year:", "2012"),
+    sliderInput("year", "Years of Interest", min = 1979, max = 2012, value = c(2002, 2012)),
     textInput("start_date", "Start Date:", "06-30"),
     textInput("end_date", "End Date:", "08-05")
   ),
@@ -34,20 +33,17 @@ shinyUI(fluidPage(
   mainPanel(
     
     tabsetPanel(
-      tabPanel("Introduction", includeMarkdown("docs/introduction.md")),
       tabPanel("2014 Real Time", 
                plotOutput("realtime"),
-               plotOutput("tides"),
                plotOutput("testFishery"),
                plotOutput("testFisheryComments")
       ), 
       tabPanel("Prior Sonar Counts", 
-               plotOutput("barchart"),
-               plotOutput("linechart")
-
+               plotOutput("barchart")),
+      tabPanel("About", includeMarkdown("docs/introduction.md"))
                
       ) 
     )
     
   )
-))
+)
