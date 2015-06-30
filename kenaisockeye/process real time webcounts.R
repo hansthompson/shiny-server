@@ -11,3 +11,6 @@ ggplot(this_season, aes(x = count_date, y = fish_count)) + geom_bar(stat = "iden
   ylab("Fish Count") + xlab("Date in 2015") + ggtitle("This Season's Kenai Sockeye Return")
 
 
+
+library(RCurl)
+
