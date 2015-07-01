@@ -19,7 +19,7 @@ ui <- bootstrapPage(
                               selected = "Spenard")
                   )
     )
-)
+
 
 server <- function(input, output, session) {
     
@@ -47,5 +47,5 @@ server <- function(input, output, session) {
     })
     
 }
-1
+
 shinyApp(ui, server)
