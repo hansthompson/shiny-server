@@ -58,23 +58,6 @@ shinyServer(function(input, output) {
     return(p)    
   })
   
-  realtime_chart <- reactive({
-    ylimit <- max(realtime_reactive()$cfue_estimates)
-    p <- ggplot(data = realtime_reactive(), aes(x = Date, y = cfue_estimates)) +   
-      ylim(c(0, ylimit) * 1.1) +
-      #xlim(c(real_tim$date[1], future)) 
-      geom_line(aes(color = "red"), size = 3) +   
-      #stat_smooth(  method = "lm", 
-      #              formula = y ~ poly(x, 4), 
-      #              level = 0.95,
-      #              fullrange = FALSE,
-      #              se = TRUE,
-      #              aes(colour = "black")) +
-      theme(legend.position="none") +
-      ggtitle("Predicted Catch Per Effort") +
-      ylab("Predicted Sockeye Catch Per Day") 
-    return(p)
-  })
   
   testFishReactive <- reactive({
     p <- ggplot(data = testFish, aes(x = Date, y = StationCount, color = allIDs, fill = allIDs)) +
@@ -110,7 +93,10 @@ shinyServer(function(input, output) {
   
   ggplot(data = average_sonar, aes(x = date, y = mean)) + geom_line() +
      geom_bar(data = this_season, aes(x = count_date, y = fish_count), fill = "red", stat = "identity") + 
-     ylab("Fish Count") + xlab("Date in 2015") + ggtitle("Kenai River Sockeye")  
+     ylab("Fish Count") + xlab("Date in 2015") + ggtitle("Kenai River Sockeye")  + 
+     geom_vline(xintercept = as.numeric(ymd("2015-07-10")), linetype = "dashed", colour="#000099") +
+     geom_vline(xintercept = as.numeric(ymd("2015-07-31")), linetype = "dashed", colour="#000099")
+      
   })
   
 

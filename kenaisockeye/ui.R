@@ -10,7 +10,7 @@ shinyUI(fluidPage(
   sidebarPanel(
   
   wellPanel(
-    helpText("Hi. Play around with the inputs to subset the historical data or look at the predictions."),
+    #helpText("Hi. Play around with the inputs to subset the historical data or look at the predictions."),
     sliderInput("year", "Years of Interest", min = 1979, max = 2012, value = c(2002, 2012), sep = ""),
     textInput("start_date", "Start Date:", "06-30"),
     textInput("end_date", "End Date:", "08-05")
