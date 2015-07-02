@@ -7,6 +7,8 @@ library(gridExtra)
 library(RCurl)
 
 
+
+
 shinyServer(function(input, output) {  
 
   ########LOAD SONAR#######
@@ -19,7 +21,12 @@ shinyServer(function(input, output) {
   #input <- list(year = c(2002,2012), 
   #              start_date = "06-30", 
   #              end_date = "08-05")
-  
+
+    foo <- sonar
+    year(foo$date) <- 2015
+    average_sonar <- foo %>% group_by(date) %>% summarize(mean = mean(n)) 
+    
+      
   sonar_reactive <- reactive({
     year(sonar$date) <- 2014
     start_year <- input$year[1]
@@ -96,20 +103,25 @@ shinyServer(function(input, output) {
   x <- getURL("http://www.adfg.alaska.gov/sf/FishCounts/index.cfm?ADFG=export.excel&countLocationID=40&year=2015&speciesID=420")
   this_season <- read.csv(text = x, sep = "\t")
   this_season$count_date <- ymd(paste(this_season$year, this_season$count_date))
+  blank <- this_season[1,] 
+  blank$fish_count <- 0
+  blank$count_date <- blank$count_date - days(1)
+  this_season <- rbind(this_season, blank)
   
-  ggplot(this_season, aes(x = count_date, y = fish_count)) + geom_bar(stat = "identity") + 
-    ylab("Fish Count") + xlab("Date in 2015") + ggtitle("This Season's Kenai Sockeye Return")
+  ggplot(data = average_sonar, aes(x = date, y = mean)) + geom_line() +
+     geom_bar(data = this_season, aes(x = count_date, y = fish_count), fill = "red", stat = "identity") + 
+     ylab("Fish Count") + xlab("Date in 2015") + ggtitle("Kenai River Sockeye")  
   })
   
 
-  output$testFishery <- renderPlot({
-    print(testFishReactive())
-  })
+  #output$testFishery <- renderPlot({
+  #  print(testFishReactive())
+  #})
 
-  output$testFisheryComments <- renderPlot({
-    grid.table(d = unique(testFish[testFish$Comment != "", c(2, 9)]),
-               show.rownames = FALSE)
-  })
+  #output$testFisheryComments <- renderPlot({
+  #  grid.table(d = unique(testFish[testFish$Comment != "", c(2, 9)]),
+  #             show.rownames = FALSE)
+  #})
   
   ###TABSET: PRIOR DATA####
   output$linechart <- renderPlot({
@@ -119,7 +131,7 @@ shinyServer(function(input, output) {
   output$barchart <- renderPlot({
     p <- prior_barchart()
     print(p)
-  })
+  }, height = 600)
 
 })
   ##TABSET: ABOUT
