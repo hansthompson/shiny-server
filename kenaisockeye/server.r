@@ -93,7 +93,7 @@ shinyServer(function(input, output) {
   #})
 
   output$realtime <- renderPlot({
-  x <- getURL("http://www.adfg.alaska.gov/sf/FishCounts/index.cfm?ADFG=export.excel&countLocationID=40&year=2015,2014&speciesID=420")
+  x <- getURL("http://www.adfg.alaska.gov/sf/FishCounts/index.cfm?ADFG=export.excel&countLocationID=40&year=2015&speciesID=420")
   this_season <- read.csv(text = x, sep = "\t")
   this_season$count_date <- ymd(paste(this_season$year, this_season$count_date))
   
