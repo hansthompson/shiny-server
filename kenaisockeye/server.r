@@ -5,8 +5,7 @@ library(lubridate)
 library(stringr)
 library(gridExtra)
 library(RCurl)
-
-
+library(scales)
 
 
 shinyServer(function(input, output) {  
@@ -29,6 +28,7 @@ shinyServer(function(input, output) {
       
   sonar_reactive <- reactive({
     year(sonar$date) <- 2014
+    factor(sonar$year)
     start_year <- input$year[1]
     end_year   <- input$year[2]
     start_date <- ymd(paste("2014", input$start_date, sep = "-"))
@@ -37,8 +37,8 @@ shinyServer(function(input, output) {
     sonar %>% 
       filter(year >= start_year, year <= end_year, 
              date >= start_date,
-             date <= end_date
-  )
+             date <= end_date) %>%
+      mutate(year = factor(year))
     
   #sonar_reactive <- sonar
   })
@@ -53,34 +53,13 @@ shinyServer(function(input, output) {
 
   #######PLOTING#########
   prior_barchart <- reactive({
-    p <- ggplot(data = sonar_reactive(), aes(x = date, y = n, group = year, fill = factor(year))) + 
-         geom_bar(stat = "identity") + ylab("Daily Count") + xlab("Date")
+    p <- ggplot(data = sonar_reactive(), aes(x = date, y = n, group = year, fill = year)) + 
+         geom_bar(stat = "identity") + ylab("Daily Count") + xlab("Date") +
+      scale_y_continuous(labels =comma)
     return(p)    
   })
-  
-  
-  testFishReactive <- reactive({
-    p <- ggplot(data = testFish, aes(x = Date, y = StationCount, color = allIDs, fill = allIDs)) +
-           geom_bar(stat = "identity") +
-           ggtitle("Total Test Fish Caught in Cook Inlet") +
-           ylab("Total Fish") +
-           annotate("text",
-                    x=unique(testFish$Date[testFish$Comment != ""]),
-                    y=1,
-                    label="*", size = 8) + 
-           theme(legend.title=element_blank())
-  
-    return(p) 
-  })
-
-    #########################
 
   ######Publishing#########
-
-  ###TABSET: REAL TIME#####
-  #output$realtime <- renderPlot({
-  #  print(realtime_chart())
-  #})
 
   output$realtime <- renderPlot({
   x <- getURL("http://www.adfg.alaska.gov/sf/FishCounts/index.cfm?ADFG=export.excel&countLocationID=40&year=2015&speciesID=420")
@@ -95,19 +74,11 @@ shinyServer(function(input, output) {
      geom_bar(data = this_season, aes(x = count_date, y = fish_count), fill = "red", stat = "identity") + 
      ylab("Fish Count") + xlab("Date in 2015") + ggtitle("Kenai River Sockeye")  + 
      geom_vline(xintercept = as.numeric(ymd("2015-07-10")), linetype = "dashed", colour="#000099") +
-     geom_vline(xintercept = as.numeric(ymd("2015-07-31")), linetype = "dashed", colour="#000099")
-      
-  })
+     geom_vline(xintercept = as.numeric(ymd("2015-07-31")), linetype = "dashed", colour="#000099") +
+    scale_y_continuous(labels =comma)
   
+  })
 
-  #output$testFishery <- renderPlot({
-  #  print(testFishReactive())
-  #})
-
-  #output$testFisheryComments <- renderPlot({
-  #  grid.table(d = unique(testFish[testFish$Comment != "", c(2, 9)]),
-  #             show.rownames = FALSE)
-  #})
   
   ###TABSET: PRIOR DATA####
   output$linechart <- renderPlot({
