@@ -72,7 +72,7 @@ shinyServer(function(input, output) {
   
   ggplot(data = average_sonar, aes(x = date, y = mean)) + geom_line() +
      geom_bar(data = this_season, aes(x = count_date, y = fish_count), fill = "red", stat = "identity") + 
-     ylab("Fish Count") + xlab("Date in 2015") + ggtitle("Kenai River Sockeye")  + 
+     ylab("Fish Count") + xlab("Date") + ggtitle("Kenai River Sockeye")  + 
      geom_vline(xintercept = as.numeric(ymd("2015-07-10")), linetype = "dashed", colour="#000099") +
      geom_vline(xintercept = as.numeric(ymd("2015-07-31")), linetype = "dashed", colour="#000099") +
     scale_y_continuous(labels =comma)
