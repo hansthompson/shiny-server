@@ -3,9 +3,7 @@ library(ggplot2)
 # Define UI for application that plots random distributions 
 shinyUI(fluidPage(theme = "bootstrap.css",
   
-  # Application title
-  #headerPanel(),
-  
+  tags$head(includeScript("google-analytics.js")),
   navbarPage(title = "Dipnet_App! - IN BETA",
     tabsetPanel(
       tabPanel("2015 Real Time",
