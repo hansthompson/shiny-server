@@ -1,7 +1,7 @@
 library(shiny)
 library(ggplot2)
 # Define UI for application that plots random distributions 
-shinyUI(fluidPage(
+shinyUI(fluidPage(theme = "bootstrap.css",
   
   # Application title
   headerPanel("Dipnet_App! - IN BETA"),
