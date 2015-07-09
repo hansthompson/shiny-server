@@ -31,7 +31,7 @@ server <- function(input, output, session) {
         # Use leaflet() here, and only include aspects of the map that
         # won't need to change dynamically (at least, not unless the
         # entire map is being torn down and recreated).
-        leaflet(data = filteredData()) %>% addTiles() %>% addProviderTiles("Stamen.Toner") %>% addMarkers() 
+        leaflet(data = filteredData()) %>% addProviderTiles("Stamen.Toner") %>% addCircles() 
     })
     
     # Incremental changes to the map (in this case, replacing the
