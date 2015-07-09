@@ -88,7 +88,7 @@ shinyServer(function(input, output) {
   output$barchart <- renderPlot({
     p <- prior_barchart()
     print(p)
-  }, height = 600)
+  })
 
 })
   ##TABSET: ABOUT
