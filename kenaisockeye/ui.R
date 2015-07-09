@@ -21,7 +21,7 @@ shinyUI(fluidPage(theme = "bootstrap.css",
       tabPanel("Prior Sonar Counts",
                fluidRow(
                  #helpText("Hi. Play around with the inputs to subset the historical data or look at the predictions."),
-                 sliderInput("year", "Years of Interest", min = 1979, max = 2012, value = c(2002, 2012), sep = ""),
+                 sliderInput("year", "Years of Interest", min = 1979, max = 2014, value = c(2004, 2014), sep = ""),
                  textInput("start_date", "Start Date:", "06-30"),
                  textInput("end_date", "End Date:", "08-05")
                ),
