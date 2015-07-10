@@ -1,6 +1,6 @@
 library(shiny)
 library(ggplot2)
-# Define UI for application that plots random distributions 
+
 shinyUI(fluidPage(theme = "bootstrap.css",
   
   tags$head(includeScript("google-analytics.js")),
