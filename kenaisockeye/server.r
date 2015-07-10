@@ -54,7 +54,7 @@ shinyServer(function(input, output) {
   #######PLOTING#########
   prior_barchart <- reactive({
     p <- ggplot(data = sonar_reactive(), aes(x = date, y = n, group = year, fill = year)) + 
-         geom_bar(stat = "identity") + ylab("Daily Count") + xlab("Date") +
+         geom_bar(stat = "identity") + ylab("Cumulative Daily Count Across Years") + xlab("Date") +
       scale_y_continuous(labels =comma)
     return(p)    
   })
@@ -75,7 +75,7 @@ shinyServer(function(input, output) {
      ylab("Fish Count") + xlab("Date") + ggtitle("Kenai River Sockeye")  + 
      geom_vline(xintercept = as.numeric(ymd("2015-07-10")), linetype = "dashed", colour="#000099") +
      geom_vline(xintercept = as.numeric(ymd("2015-07-31")), linetype = "dashed", colour="#000099") +
-    scale_y_continuous(labels =comma)
+    scale_y_continuous(labels =comma) 
   
   })
 
