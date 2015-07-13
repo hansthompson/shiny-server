@@ -23,13 +23,10 @@ shinyUI(fluidPage(theme = "bootstrap.css",
                fluidRow(
                  sliderInput("year", "Years of Interest", min = 1979, max = 2014, value = c(2004, 2014), sep = ""),
                  textInput("start_date", "Start Date:", "06-30"),
-                 textInput("end_date", "End Date:", "08-05")
-               ),
+                 textInput("end_date", "End Date:", "08-05")),
                plotOutput("barchart")),
       tabPanel("About", includeMarkdown("docs/introduction.md"))
-               
       ) 
     )
-    
   )
 )
