@@ -3,6 +3,7 @@ library(leaflet)
 library(dplyr)
 load("data/all_the_data.rda")
 
+
 precincts <- levels(factor(all_the_data$NAME))
 
 #input <- list(select = "Spenard")
@@ -20,24 +21,18 @@ ui <- bootstrapPage(
 
 server <- function(input, output, session) {
     
-    # Reactive expression for the data subsetted to what the user selected
     filteredData <- reactive({
-         all_the_data %>% filter(as.character(NAME) == input$select) %>% select(x, y) %>%
+        all_the_data %>% filter(as.character(NAME) == input$select) %>% select(x, y, zone) %>%
             rename(lng = x, lat = y)
     })
 
     
     output$map <- renderLeaflet({
-        # Use leaflet() here, and only include aspects of the map that
-        # won't need to change dynamically (at least, not unless the
-        # entire map is being torn down and recreated).
-        leaflet(data = filteredData()) %>% addProviderTiles("Stamen.Toner") %>% addCircles() 
+        filtered <- filteredData()
+        factpal <- colorFactor(topo.colors(length(levels(droplevels(filtered$zone)))), filtered$zone)
+        leaflet(data = filtered) %>% addProviderTiles("Stamen.Toner") %>% addCircleMarkers(color = factpal(filtered$zone))
     })
     
-    # Incremental changes to the map (in this case, replacing the
-    # circles when a new color is chosen) should be performed in
-    # an observer. Each independent set of things that can change
-    # should be managed in its own observer.
     observe({
         
         leafletProxy("map", data = filteredData()) 
