@@ -21,10 +21,10 @@ ui <- bootstrapPage(
 
 server <- function(input, output, session) {
   filteredData <- reactive({
-    map1 <- spTransform( map, CRS( "+init=epsg:26934" ) )  
-    map1 <- gBuffer(map1, width = input$feetbuffer / 3.28084)
-    map1 <- spTransform( map1 , CRS("+proj=longlat"))
-    as(map1, "SpatialPolygonsDataFrame")
+    spTransform(map, CRS("+init=epsg:26934")) %>%  
+     gBuffer(width = input$feetbuffer / 3.28084) %>%
+     spTransform(CRS("+proj=longlat")) %>%
+     as("SpatialPolygonsDataFrame")
   })
   output$map <- renderLeaflet({
     leaflet() %>% addTiles(urlTemplate = "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png") %>% setView(-149.85, 61.15, zoom = 12) %>%
