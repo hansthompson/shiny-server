@@ -1,21 +1,17 @@
 library(rgeos)
 library(rgdal)
 library(leaflet)
+library(geojsonio)
 load("map.rda") 
-spToGeoJSON <- function(x){
-  tf<-tempfile()
-  writeOGR(x, tf,layer = "geojson", driver = "GeoJSON")
-  js <- paste(readLines(tf), collapse=" ")
-  file.remove(tf)
-  return(js)
-}
 
-ui <- bootstrapPage(
+ui <- bootstrapPage(title = "Cannabis Cafe Zoning",
     tags$head(includeScript("google-analytics.js")),
     tags$style(type = "text/css", "html, body {width:100%;height:100%}"),
     leafletOutput("map", width = "100%", height = "100%"),
-    absolutePanel(top = 10, right = 10,
-                  numericInput("feetbuffer", label = h3("Buffer In Feet"), 1000)
+    absolutePanel(class = "panel panel-default",top = 10, right = 10, width = 330,
+                  p("Since recent state initiaitves passed to legalize the retail sale of Cannabis, local communities have been proposing and enacting zoning laws distancing new stores from schools and daycares. This interactive map of anchorage allows you to simulate the effect of this kind of zoning law across Anchorage."),  
+                  p("Using the publicly available parcel data from 2014 for over 200 zoned schools and daycares you can visualize the effect that different distance buffers would have selectively where Anchorage's first marijuana cafes would be."),                  
+                  numericInput("feetbuffer", label = h4("Buffer In Feet"), 1000)
                   )
     )
 
@@ -28,7 +24,7 @@ server <- function(input, output, session) {
   })
   output$map <- renderLeaflet({
     leaflet() %>% addTiles(urlTemplate = "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png") %>% setView(-149.85, 61.15, zoom = 12) %>%
-      addGeoJSON(spToGeoJSON(filteredData()))
+      addGeoJSON(geojson_json((filteredData())))
   })
   observe({
     leafletProxy("map", data = filteredData()) 
