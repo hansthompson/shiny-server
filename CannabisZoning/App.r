@@ -14,7 +14,6 @@ ui <- bootstrapPage(theme = shinytheme("spacelab"),
                                   includeMarkdown("docs/about.md"),
                                   numericInput("feetbuffer", label = h4("Feet From Facility"), 500),
                                   actionButton("updateButton", "Update", align = "center"),
-                                  br(),br(),
                                   a(img(src = "codeforanc.png"), href = "http://codeforanchorage.org/", align = "center")
                                   )
                     )
