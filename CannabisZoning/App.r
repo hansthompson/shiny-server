@@ -13,10 +13,13 @@ ui <- bootstrapPage(theme = shinytheme("spacelab"),
                     absolutePanel(class = "panel panel-default",top = 10, right = 10, width = 330,
                                   includeMarkdown("docs/about.md"),
                                   numericInput("feetbuffer", label = h4("Feet From Facility"), 500),
-                                  actionButton("updateButton", "Update", align = "center"),
-                                  a(img(src = "codeforanc.png"), href = "http://codeforanchorage.org/", align = "center")
+                                  actionButton("updateButton", "Update"),
+                                  br(),
+                                  a(img(src = "codeforanc.png"), href = "http://codeforanchorage.org/"),
+                                  br(),
+                                  (a("Contact", href = "hans.thompson1@gmail.com"))
                                   )
-                    )
+                )
 
 
 server <- function(input, output, session) {
