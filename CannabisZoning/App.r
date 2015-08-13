@@ -5,7 +5,7 @@ library(leaflet)
 library(geojsonio)
 load("map.rda") 
 
-ui <- bootstrapPage(theme = shinytheme("Spacelab"),
+ui <- bootstrapPage(theme = shinytheme("spacelab"),
                     title = "Cannabis Business Zoning",
                     tags$head(includeScript("google-analytics.js")),
                     tags$style(type = "text/css", "html, body {width:100%;height:100%}"),
