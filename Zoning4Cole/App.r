@@ -6,7 +6,7 @@ library(geojsonio)
 load("map.rda") 
 
 ui <- bootstrapPage(theme = shinytheme("Spacelab"),
-                    title = "Cannabis Cafe Zoning",
+                    title = "Cannabis Business Zoning",
                     tags$head(includeScript("google-analytics.js")),
                     tags$style(type = "text/css", "html, body {width:100%;height:100%}"),
                     leafletOutput("map", width = "100%", height = "100%"),
@@ -15,9 +15,10 @@ ui <- bootstrapPage(theme = shinytheme("Spacelab"),
                                   numericInput("feetbuffer", label = h4("Feet From Facility"), 500),
                                   actionButton("updateButton", "Update"),
                                   br(),
-                                  a(img(src = "codeforanc.png"), href = "http://codeforanchorage.org/"))
+                                  a(img(src = "codeforanc.png"), href = "http://codeforanchorage.org/")
+                                  )
                     )
-)
+
 
 server <- function(input, output, session) {
   filteredData <- eventReactive(input$updateButton, {
