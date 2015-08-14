@@ -17,7 +17,7 @@ ui <- bootstrapPage(theme = shinytheme("spacelab"),
                                   br(),br(),
                                   a(img(src = "codeforanc.png"), href = "http://codeforanchorage.org/"),
                                   br(),br(),
-                                  (a("Contact", href = "hans.thompson1@gmail.com"))
+                                  (a("Contact", href = "mailto:hans.thompson1@gmail.com"))
                                   )
                 )
 
