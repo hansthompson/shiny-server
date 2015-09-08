@@ -1,13 +1,16 @@
-
+library(dplyr)
+library(XML)
+library(lubridate)
+library(tidyr)
+library(leaflet)
+load("stops.rda")
 
 time_stamp <- Sys.time()
-base <- "http://bustracker.muni.org/InfoPoint/XML/vehiclelocation.xml"
-xml_obj <- xmlParse(base)
-locations <- xmlToDataFrame(xml_obj) %>% filter(runid != "<NA>")
 
-base <- "http://bustracker.muni.org/InfoPoint/XML/stopdepartures.xml"
-xml_obj <- xmlParse(base)
-stop_departures <- xmlToList(xml_obj) 
+locations <- xmlToDataFrame(xmlParse("http://bustracker.muni.org/InfoPoint/XML/vehiclelocation.xml")) %>% 
+  filter(runid != "<NA>", latitude != "0.0")
+
+stop_departures <- xmlToList(xmlParse("http://bustracker.muni.org/InfoPoint/XML/stopdepartures.xml")) 
 
 delays <- data.frame(
     id = as.numeric(unlist(lapply(stop_departures[-1], function(x) x[[1]]))),
@@ -28,6 +31,7 @@ delays <- delays %>%
   filter(ord < 10)
 
 delays <- inner_join(delays, stops, by = "id") 
+
 
 content <- paste(locations$routeid,locations$direction)
 
