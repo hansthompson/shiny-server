@@ -22,12 +22,12 @@ server <- function(input, output, session) {
     base <- "http://bustracker.muni.org/InfoPoint/XML/stopdepartures.xml"
     xml_obj <- xmlParse(base)
     stop_departures <- xmlToList(xml_obj) 
-    
+    removenulls <- function(x) {ifelse(is.null(x), NA, x)}
     delays <- data.frame(
       id = as.numeric(unlist(lapply(stop_departures[-1], function(x) x[[1]]))),
       routeID = unlist(lapply(stop_departures[-1], function(x) x[[3]][[5]][[1]])), 
       direction = unlist(lapply(stop_departures[-1], function(x) x[[3]][[6]])),
-      dev = as.numeric(unlist(lapply(stop_departures[-1], function(x) x[[3]][[3]]))) /60 ,
+      dev = unlist(lapply(lapply(stop_departures[-1], function(x) x[[3]][[3]]), removenulls)),
       edt = ymd_hms(paste0(format(Sys.time(), "%Y-%m-%d"), " ", unlist(lapply(stop_departures[-1], function(x) x[[3]][[1]])), ":00")),
       sdt = unlist(lapply(stop_departures[-1], function(x) x[[3]][[2]])),
       stamp = time_stamp

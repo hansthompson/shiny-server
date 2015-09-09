@@ -10,7 +10,7 @@ write_files_to <- "/home/ht/Desktop/"
 time_stamp <- Sys.time()
 
 locations <- xmlToDataFrame(xmlParse("http://bustracker.muni.org/InfoPoint/XML/vehiclelocation.xml")) %>% 
-  filter(runid != "<NA>", latitude != "0.0")
+  filter(latitude != "0.0")
 
 stop_departures <- xmlToList(xmlParse("http://bustracker.muni.org/InfoPoint/XML/stopdepartures.xml")) 
 
