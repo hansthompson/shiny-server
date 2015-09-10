@@ -43,7 +43,7 @@ server <- function(input, output, session) {
       addGeoJSON(geojson_json((buffers()))) + addGeoJSON(filteredZones())
   })
   observe({
-    leafletProxy("map", data = filteredData()) 
+    leafletProxy("map", data = buffers()) 
   })
 }
 
