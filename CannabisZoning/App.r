@@ -40,7 +40,7 @@ server <- function(input, output, session) {
   
   output$map <- renderLeaflet({
     leaflet() %>% addTiles(urlTemplate = "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png") %>% setView(-149.85, 61.15, zoom = 12) %>%
-      addGeoJSON(geojson_json((buffers()))) + addGeoJSON(filteredZones())
+      addGeoJSON(geojson_json((buffers()))) + addGeoJSON(geojson_json(filteredZones()))
   })
   observe({
     leafletProxy("map", data = buffers()) 
