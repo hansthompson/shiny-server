@@ -29,7 +29,7 @@ ui <- bootstrapPage(theme = shinytheme("spacelab"),
 server <- function(input, output, session) {
   buffers <- eventReactive(input$updateButton, {
     spTransform(map, CRS("+init=epsg:26934")) %>%  
-      gBuffer(width = inpu111t$feetbuffer / 3.28084) %>%
+      gBuffer(width = input$feetbuffer / 3.28084) %>%
       spTransform(CRS("+proj=longlat")) %>%
       as("SpatialPolygonsDataFrame")
   })
