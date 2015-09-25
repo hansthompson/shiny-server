@@ -9,7 +9,7 @@ load("route_lines.rda")
 #input <- list(route = 1)
 
 ui <- shinyUI(bootstrapPage(
-                      title = "Cannabis Business Zoning",
+                      title = "Bus App!",
                       #tags$head(includeScript("google-analytics.js")),
                       tags$style(type = "text/css", "html, body {width:100%;height:100%}"),
                       leafletOutput("map", width = "100%", height = "100%"),
@@ -37,7 +37,7 @@ server <- function(input, output) {
   
   user_route_lines <- reactive({
      user_route_id <- input$route
-     user_route_lines <- in_bound %>% filter(as.name("route") == user_route_id) %>% select(shape_pt_lon, shape_pt_lat)
+     user_route_lines <- in_bound %>% filter(route == input$route) %>% select(shape_pt_lon, shape_pt_lat)
      colnames(user_route_lines) <- c("long", "lati")
      user_route_lines            
   })
