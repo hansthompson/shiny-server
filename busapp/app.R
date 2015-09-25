@@ -1,4 +1,5 @@
 #library(shinythemes)
+library(dplyr)
 library(lazyeval)
 library(shiny)
 library(leaflet)
@@ -36,7 +37,7 @@ server <- function(input, output) {
   
   user_route_lines <- reactive({
      user_route_id <- input$route
-     user_route_lines <- in_bound %>% filter(route == user_route_id) %>% select(shape_pt_lon, shape_pt_lat)
+     user_route_lines <- in_bound %>% filter(as.name("route") == user_route_id) %>% select(shape_pt_lon, shape_pt_lat)
      colnames(user_route_lines) <- c("long", "lati")
      user_route_lines            
   })
