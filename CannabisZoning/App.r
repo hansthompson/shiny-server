@@ -7,8 +7,7 @@ library(leaflet)
 library(geojsonio)
 
 load("map.rda") 
-#load("zones.rda")
-#zones_filtered <- zones
+load("zones.rda")
 
 #input <- list(feetbuffer = 500, zones = "B-3")
 
@@ -22,7 +21,7 @@ ui <- bootstrapPage(theme = shinytheme("spacelab"),
                                   includeMarkdown("docs/about.md"),
                                   numericInput("feetbuffer", 
                                                label = h4("Feet From Facility"), 500),
-                                  #selectInput("zones", "Specific Zone", as.character(levels(zones@data$ZONING_DES))),
+                                  selectInput("zones", "Specific Zone", as.character(levels(zones@data$ZONING_DES))),
                                   actionButton("recalc", "Update"),
                                   br(),br(),
                                   a(img(src = "codeforanc.png"), 
@@ -39,17 +38,20 @@ server <- function(input, output, session) {
       spTransform(CRS("+proj=longlat")) %>%
       as("SpatialPolygonsDataFrame")
   }, ignoreNULL = FALSE)
-  #filteredZones <- eventReactive(input$updateButton, {
-  #zones_filtered@data <- zones@data[as.character(zones@data$ZONING_DES) == input$zone,] 
-  #zones_filtered <-     as(zones_filtered, "SpatialPolygonsDataFrame")
-  #})
+  filteredZones <- eventReactive(input$updateButton, {
+  zones_filtered <- zones[as.character(zones@data$ZONING_DES) == input$zone,] 
+  zones_filtered <- as(zones_filtered, "SpatialPolygonsDataFrame")
+  return(zones_filtered)
+  })
   
   output$map <- renderLeaflet({
     #SpatialPolygons(list(buffers, zones), c("buffer", "zones"))
     leaflet() %>% 
       addTiles(urlTemplate = "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png") %>% 
       setView(-149.85, 61.15, zoom = 12) %>%
-      addGeoJSON(geojson_json(buffer())) #+ addGeoJSON(geojson_json(filteredZones))
+      addGeoJSON(geojson_json(buffer())) %>%
+      addPolygons(data =   filteredZones(),
+                  color="red")
   })
 
 }
